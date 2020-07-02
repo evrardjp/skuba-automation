@@ -7,18 +7,22 @@
   - name: Install pexpect
     zypper:
       name: python3-pexpect
+      state: present
 
-- import_playbook: disable-caasp-product-enable-sles-product.yml
+- import_playbook: deactivate-products.yml
+- import_playbook: enable-sles-product.yml
 - import_playbook: add-caasp5-devel-repo.yml
 
 - hosts: all
   gather_facts: no
   tasks:
-  - expect:
+  - name: Zypper refresh and trust a new repo
+    expect:
       command: zypper refresh
       responses:
         .*trust always.*: a
-  - command: zypper migration --non-interactive --auto-agree-with-licenses
+  - name: Trigger zypper migration on all hosts
+    command: zypper migration --non-interactive --auto-agree-with-licenses
   - debug:
       msg: Follow release notes. Do it manually.
     run_once: True

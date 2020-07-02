@@ -1,0 +1,6 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Disable all products
+      command: SUSEConnect -d
