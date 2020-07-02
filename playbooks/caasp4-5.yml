@@ -1,0 +1,30 @@
+---
+# To migrate from CaaSP4 to 5.
+
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: Install pexpect
+    zypper:
+      name: python3-pexpect
+
+- import_playbook: disable-caasp-product-enable-sles-product.yml
+- import_playbook: add-caasp5-devel-repo.yml
+
+- hosts: all
+  gather_facts: no
+  tasks:
+  - expect:
+      command: zypper refresh
+      responses:
+        .*trust always.*: a
+  - command: zypper migration --non-interactive --auto-agree-with-licenses
+  - debug:
+      msg: Follow release notes. Do it manually.
+    run_once: True
+  - debug:
+      msg: Upgrade skuba addons. Do it manually. Or with t2supgrade.
+    run_once: True
+  - debug:
+      msg: Run skuba upgrade. Same as above.
+    run_once: True

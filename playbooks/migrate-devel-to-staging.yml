@@ -1,0 +1,22 @@
+---
+# For testing the modification of an environment to a staging one. Like for testing staging for example.
+# Please use zypper module instead, but I was lazy.
+- hosts: all
+  gather_facts: no
+  vars:
+    staging_version: "4.2.0"
+  tasks:
+    - name: Ignore vendors
+      lineinfile:
+        path: /etc/zypp/zypp.conf
+        line: "solver.allowVendorChange = true"
+        state: present
+      become: true
+    - name: Change repositories
+      shell: |
+        zypper ar -p 70 http://download.suse.de/ibs/Devel:/CaaSP:/4.0:/Staging:/{{ staging_version }}/SUSE_SLE-15-SP1_Update_Products_CASP40_Update_standard/ devel-caasp-staging
+      become: true
+      register: zar
+      retries: 30
+      delay: 30
+      until: zar.rc == 0

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - command: zypper ar http://download.suse.de/ibs/Devel:/CaaSP:/5/SLE_15_SP2/Devel:CaaSP:5.repo
+    - blockinfile:
+        create: yes
+        path: /etc/zypp/vendors.d/caasp.conf
+        block: |
+          [main]
+          vendors = opensuse,suse,obs://build.suse.de/Devel:CaaSP:5

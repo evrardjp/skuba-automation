@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    #regcode: "YOU HAVE TO GIVE YOUR OWN. Uncomment and define yours."
+  tasks:
+    - name: Disable all products
+      command: SUSEConnect -d
+    - name: enable sle
+      command: "SUSEConnect -r {{ regcode }}"
+    - name: Enable containers
+      command: "SUSEConnect -p sle-module-containers/15.1/x86_64 -r {{regcode }}"
